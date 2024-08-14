@@ -1,6 +1,31 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Context/Context";
+import { VscSignOut } from "react-icons/vsc";
+import profile from "../assets/image/user.avif"
+import Swal from "sweetalert2";
+
 
 const Navbar = () => {
+    
+    const { user, userLogOut } = useContext(AuthContext)
+    
+    const handleSignOut = () => {
+        userLogOut()
+          .then(() => {
+            console.log("Sign Out")
+            Swal.fire({
+                title: 'Logged Out',
+                text: 'You have safely signed out.',
+                icon: 'error',
+                confirmButtonText: 'Close'
+            });
+          })
+          .catch(error => {
+            console.log(error.message)
+          })
+      }
+
     return (
         <div className=" bg-base-100">
             <div className="navbar bg-base-100 md:w-[80%] mx-auto">
@@ -36,7 +61,20 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <a className="btn">Button</a>
+                {
+            user &&
+            <>
+              <details className="dropdown dropdown-end">
+                <summary className="btn btn-ghost p-0 rounded-full m-1">
+                  <img className="object-cover w-12 h-12 border-2  rounded-full avatar" src={user.photoURL ? user.photoURL : profile} />
+                </summary>
+                <ul className="p-2 shadow menu dropdown-content text-black z-10 bg-base-100 rounded-box w-52">
+                  <li><a>{user.displayName}</a></li>
+                  <li onClick={handleSignOut}><a><VscSignOut className="text-xl" />Sign Out</a></li>
+                </ul>
+              </details>
+            </>
+          }
                 </div>
             </div>
         </div>
