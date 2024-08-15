@@ -15,9 +15,9 @@ const Products = () => {
 
     // get all product using tanstack query
     const { data: products = [], refetch, isLoading } = useQuery({
-        queryKey: ["products"],
+        queryKey: ["products", { search, brand: selectedBrand, category: selectedCategory, priceRange: selectedPriceRange }],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5000/products?search=${search}`)
+            const res = await axios.get(`http://localhost:5000/products?search=${search}&brand=${selectedBrand}&category=${selectedCategory}&priceRange=${selectedPriceRange}`)
             return res.data
         }
     })
@@ -36,16 +36,19 @@ const Products = () => {
 
     const handleBrandChange = (e) => {
         setSelectedBrand(e.target.value);
+        console.log(e.target.value)
         refetch();
     };
 
     const handleCategoryChange = (e) => {
         setSelectedCategory(e.target.value);
+        console.log(e.target.value)
         refetch();
     };
 
     const handlePriceRangeChange = (e) => {
         setSelectedPriceRange(e.target.value);
+        console.log(e.target.value)
         refetch();
     };
 
@@ -64,6 +67,8 @@ const Products = () => {
     };
     const sortedproducts = sortproducts(products, sortOption);
 
+    const uniqueBrands = [...new Set(products.map(product => product.brand))];
+    const uniqueCategory = [...new Set(products.map(product => product.category))];
 
 
     return (
@@ -77,7 +82,7 @@ const Products = () => {
                 <button type="submit"><AiOutlineSearch className="text-gray-500 text-xl -ml-9" /></button>
             </form>
 
-            <div className="flex justify-center my-9 gap-4">
+            <div className="flex flex-col md:flex-row items-center justify-center my-9 gap-4">
                 <select value={sortOption} onChange={handleSortChange} className="select select-bordered text-gray-500 w-full max-w-xs">
                     <option value="" disabled selected>Who shot first?</option>
                     <option value="priceLowHigh">Product Price: Low to High</option>
@@ -87,18 +92,16 @@ const Products = () => {
 
                 <select value={selectedBrand} onChange={handleBrandChange} className="select select-bordered text-gray-500 w-full max-w-xs">
                     <option value="" disabled selected>All Brands</option>
-                    <option value="KitchenPro">KitchenPro</option>
-                    <option value="SoundMax">SoundMax</option>
-                    <option value="SoundMax">SoundMax</option>
-                    <option value="SoundMax">SoundMax</option>
-                    <option value="SoundMax">SoundMax</option>
-                    <option value="SoundMax">SoundMax</option>
+                    {uniqueBrands.map((brand, index) => 
+                    <option key={index} value={brand}>{brand}</option>
+                    )}
                 </select>
 
                 <select value={selectedCategory} onChange={handleCategoryChange} className="select select-bordered text-gray-500 w-full max-w-xs">
                     <option value="" disabled selected>All Categories</option>
-                    <option value="category1">Category 1</option>
-                    <option value="category2">Category 2</option>
+                    {uniqueCategory.map((category, index) => 
+                    <option key={index} value={category}>{category}</option>
+                    )}
                 </select>
 
                 <select value={selectedPriceRange} onChange={handlePriceRangeChange} className="select select-bordered text-gray-500 w-full max-w-xs">
@@ -106,6 +109,8 @@ const Products = () => {
                     <option value="0-50">$0 - $50</option>
                     <option value="50-100">$50 - $100</option>
                     <option value="100-200">$100 - $200</option>
+                    <option value="200-500">$200 - $500</option>
+                    <option value="500-1000">$500 - $1000</option>
                 </select>
             </div>
 
@@ -132,7 +137,7 @@ const Products = () => {
                                     <p className="text-gray-500 flex items-center gap-2"><VscActivateBreakpoints /><span className="font-bold">Date</span>{pro.createdAt.split("T")[0]}</p>
                                     <p className="text-gray-500 flex items-center gap-2"><VscActivateBreakpoints /><span className="font-bold">Time</span>{pro.createdAt.split("T")[1].split("Z")[0]}</p>
                                 </div>
-                                <h2 className="text-xl font-bold text-end text-red-500">{pro.price}</h2>
+                                <h2 className="text-xl font-bold text-end text-red-500">{pro.price}$</h2>
 
                             </div>
                         </div>)
