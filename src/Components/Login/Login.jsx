@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/Context";
 import Swal from "sweetalert2";
+import GoogleLogin from "../../GoogleLogin/GoogleLogin";
 
 const Login = () => {
 
@@ -51,6 +52,7 @@ const Login = () => {
           </p>
 
           <p className="mt-4">don not have an account, please <Link to="/sign-up"><span className="text-blue-500 underline">login</span></Link></p>
+          <GoogleLogin></GoogleLogin>
         </div>
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <form onSubmit={handleLogin} className="card-body">

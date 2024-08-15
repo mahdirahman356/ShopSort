@@ -19,7 +19,7 @@ const Navbar = () => {
         Swal.fire({
           title: 'Logged Out',
           text: 'You have safely signed out.',
-          icon: 'error',
+          icon: 'success',
           confirmButtonText: 'Close'
         });
       })
