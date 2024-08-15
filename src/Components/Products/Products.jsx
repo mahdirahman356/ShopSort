@@ -89,12 +89,25 @@ const Products = () => {
 
     // All Category
     const uniqueCategory = [...new Set(products.map(product => product.category))];
-
+    
+    // set par page
     const handleItemsParPage = (e) => {
         const value = parseInt(e.target.value)
         console.log(value)
         setItemsPerPage(value)
         setCurrentPage(0)
+    }
+
+    const handlePrevPage = () => {
+        if(currentPage > 0) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+
+    const handleNextPage = () => {
+        if(currentPage < pages.length - 1){
+            setCurrentPage(currentPage + 1)
+        }
     }
 
     return (
@@ -172,7 +185,7 @@ const Products = () => {
             }
             currentPage : {currentPage}
             <div className=" flex justify-center gap-3 mt-7">
-                <button className="btn flex items-center">
+                <button onClick={handlePrevPage} className="btn flex items-center">
                     <FaLongArrowAltLeft />
                     Prev
                 </button>
@@ -182,7 +195,7 @@ const Products = () => {
                         className={currentPage === page ? "btn hover:bg-slate-300 bg-blue-500 text-white" : "btn hover:bg-slate-300"} key={index}>
                         {page}
                     </button>)}
-                <button className="btn flex items-center">
+                <button onClick={handleNextPage} className="btn flex items-center">
                     Next
                     <FaLongArrowAltRight />
                 </button>
