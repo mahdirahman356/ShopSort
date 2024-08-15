@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaLongArrowAltLeft, FaLongArrowAltRight } from "react-icons/fa";
 import { VscActivateBreakpoints } from "react-icons/vsc";
 
 const Products = () => {
@@ -11,8 +12,16 @@ const Products = () => {
     const [selectedBrand, setSelectedBrand] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedPriceRange, setSelectedPriceRange] = useState("");
+    const [count, setCount] = useState(null)
+    const [itemsPerPage, setItemsPerPage] = useState(10)
+    const [currentPage, setCurrentPage] = useState(0)
+    const numbersOfPage = Math.ceil(count / itemsPerPage)
 
+    const pages = [...Array(numbersOfPage).keys()]
 
+    console.log(pages)
+
+    console.log(count)
     // get all product using tanstack query
     const { data: products = [], refetch, isLoading } = useQuery({
         queryKey: ["products", { search, brand: selectedBrand, category: selectedCategory, priceRange: selectedPriceRange }],
@@ -22,6 +31,11 @@ const Products = () => {
         }
     })
 
+    axios.get(`http://localhost:5000/products-count`)
+        .then(res => {
+            setCount(res.data.count)
+        })
+
     // search bar handle
     const handleSearch = (e) => {
         e.preventDefault()
@@ -30,22 +44,25 @@ const Products = () => {
         refetch()
     }
 
+    // sorting value
     const handleSortChange = (e) => {
         setSortOption(e.target.value);
     };
 
+    // get value of brand 
     const handleBrandChange = (e) => {
         setSelectedBrand(e.target.value);
         console.log(e.target.value)
         refetch();
     };
-
+    // get value of Category 
     const handleCategoryChange = (e) => {
         setSelectedCategory(e.target.value);
         console.log(e.target.value)
         refetch();
     };
 
+    // get value of Price Range
     const handlePriceRangeChange = (e) => {
         setSelectedPriceRange(e.target.value);
         console.log(e.target.value)
@@ -67,9 +84,18 @@ const Products = () => {
     };
     const sortedproducts = sortproducts(products, sortOption);
 
+    // All brands
     const uniqueBrands = [...new Set(products.map(product => product.brand))];
+
+    // All Category
     const uniqueCategory = [...new Set(products.map(product => product.category))];
 
+    const handleItemsParPage = (e) => {
+        const value = parseInt(e.target.value)
+        console.log(value)
+        setItemsPerPage(value)
+        setCurrentPage(0)
+    }
 
     return (
         <div className="w-[95%] md:w-[80%] mx-auto my-28">
@@ -92,15 +118,15 @@ const Products = () => {
 
                 <select value={selectedBrand} onChange={handleBrandChange} className="select select-bordered text-gray-500 w-full max-w-xs">
                     <option value="" disabled selected>All Brands</option>
-                    {uniqueBrands.map((brand, index) => 
-                    <option key={index} value={brand}>{brand}</option>
+                    {uniqueBrands.map((brand, index) =>
+                        <option key={index} value={brand}>{brand}</option>
                     )}
                 </select>
 
                 <select value={selectedCategory} onChange={handleCategoryChange} className="select select-bordered text-gray-500 w-full max-w-xs">
                     <option value="" disabled selected>All Categories</option>
-                    {uniqueCategory.map((category, index) => 
-                    <option key={index} value={category}>{category}</option>
+                    {uniqueCategory.map((category, index) =>
+                        <option key={index} value={category}>{category}</option>
                     )}
                 </select>
 
@@ -144,6 +170,28 @@ const Products = () => {
                     }
                 </div>)
             }
+            currentPage : {currentPage}
+            <div className=" flex justify-center gap-3 mt-7">
+                <button className="btn flex items-center">
+                    <FaLongArrowAltLeft />
+                    Prev
+                </button>
+                {pages.map((page, index) =>
+                    <button
+                        onClick={() => setCurrentPage(page)}
+                        className={currentPage === page ? "btn hover:bg-slate-300 bg-blue-500 text-white" : "btn hover:bg-slate-300"} key={index}>
+                        {page}
+                    </button>)}
+                <button className="btn flex items-center">
+                    Next
+                    <FaLongArrowAltRight />
+                </button>
+                <select value={itemsPerPage} onChange={handleItemsParPage} className="select select-bordered text-gray-500 " name="" id="">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
 
         </div>
     );
