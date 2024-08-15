@@ -26,12 +26,12 @@ const Products = () => {
     const { data: products = [], refetch, isLoading } = useQuery({
         queryKey: ["products", { search, brand: selectedBrand, category: selectedCategory, priceRange: selectedPriceRange, page: currentPage, size: itemsPerPage }],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5000/products?search=${search}&brand=${selectedBrand}&category=${selectedCategory}&priceRange=${selectedPriceRange}&page=${currentPage}&size=${itemsPerPage}`)
+            const res = await axios.get(`https://shop-sort-server-side.vercel.app/products?search=${search}&brand=${selectedBrand}&category=${selectedCategory}&priceRange=${selectedPriceRange}&page=${currentPage}&size=${itemsPerPage}`)
             return res.data
         }
     })
 
-    axios.get(`http://localhost:5000/products-count`)
+    axios.get(`https://shop-sort-server-side.vercel.app/products-count`)
         .then(res => {
             setCount(res.data.count)
         })
@@ -89,7 +89,7 @@ const Products = () => {
 
     // All Category
     const uniqueCategory = [...new Set(products.map(product => product.category))];
-    
+
     // set par page
     const handleItemsParPage = (e) => {
         const value = parseInt(e.target.value)
@@ -97,16 +97,16 @@ const Products = () => {
         setItemsPerPage(value)
         setCurrentPage(0)
     }
-    
+
     // handle previous button 
     const handlePrevPage = () => {
-        if(currentPage > 0) {
+        if (currentPage > 0) {
             setCurrentPage(currentPage - 1)
         }
     }
     // handle next button
     const handleNextPage = () => {
-        if(currentPage < pages.length - 1){
+        if (currentPage < pages.length - 1) {
             setCurrentPage(currentPage + 1)
         }
     }
@@ -184,28 +184,30 @@ const Products = () => {
                     }
                 </div>)
             }
-            <div className=" flex justify-center gap-3 mt-7">
-                <button onClick={handlePrevPage} className="btn flex items-center">
-                    <FaLongArrowAltLeft />
-                    Prev
-                </button>
-                {pages.map((page, index) =>
-                    <button
-                        onClick={() => setCurrentPage(page)}
-                        className={currentPage === page ? "btn hover:bg-slate-300 bg-blue-500 text-white" : "btn hover:bg-slate-300"} key={index}>
-                        {page + 1}
-                    </button>)}
-                <button onClick={handleNextPage} className="btn flex items-center">
-                    Next
-                    <FaLongArrowAltRight />
-                </button>
-                <select value={itemsPerPage} onChange={handleItemsParPage} className="select select-bordered text-gray-500 " name="" id="">
+            <div className="flex flex-col lg:flex-row justify-center items-center mt-16 gap-3">
+                <div className=" flex flex-wrap justify-center items-center gap-3 ">
+                    <button onClick={handlePrevPage} className="btn flex items-center">
+                        <FaLongArrowAltLeft />
+                        Prev
+                    </button>
+                    {pages.map((page, index) =>
+                        <button
+                            onClick={() => setCurrentPage(page)}
+                            className={currentPage === page ? "btn hover:bg-slate-300 bg-blue-500 text-white" : "btn hover:bg-slate-300"} key={index}>
+                            {page + 1}
+                        </button>)}
+                    <button onClick={handleNextPage} className="btn flex items-center">
+                        Next
+                        <FaLongArrowAltRight />
+                    </button>
+                </div>
+                <select value={itemsPerPage} onChange={handleItemsParPage} className="select select-bordered text-gray-500 w-32" name="" id="">
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                 </select>
-            </div>
 
+            </div>
         </div>
     );
 };
