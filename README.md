@@ -1,8 +1,21 @@
-# React + Vite
+# ShopSort Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend of the ShopSort project, a single-page e-commerce application built using the MERN stack. The application allows users to browse and filter products with functionalities like pagination, searching, categorization, and sorting. User authentication is implemented using Firebase.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Product Display:** Display product details including Name, Image, Description, Price, Category, Ratings, and Creation Date.
+- **Pagination:** Navigate through products using pagination controls.
+- **Search:** Search for products by name.
+- **Categorization:** Filter products by Brand Name, Category Name, and Price Range.
+- **Sorting:** Sort products by Price (Low to High, High to Low) and Date Added (Newest First).
+- **Authentication:** Google and Email/Password authentication using Firebase.
+- **Responsive Design:** Mobile-first, fully responsive design.
+
+## Project Setup
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/mahdirahman356/ShopSort.git
+   cd shop-sort-frontend
