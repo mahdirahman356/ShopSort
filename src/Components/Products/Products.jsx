@@ -24,7 +24,7 @@ const Products = () => {
     console.log(count)
     // get all product using tanstack query
     const { data: products = [], refetch, isLoading } = useQuery({
-        queryKey: ["products", { search, brand: selectedBrand, category: selectedCategory, priceRange: selectedPriceRange }],
+        queryKey: ["products", { search, brand: selectedBrand, category: selectedCategory, priceRange: selectedPriceRange, page: currentPage, size: itemsPerPage }],
         queryFn: async () => {
             const res = await axios.get(`http://localhost:5000/products?search=${search}&brand=${selectedBrand}&category=${selectedCategory}&priceRange=${selectedPriceRange}&page=${currentPage}&size=${itemsPerPage}`)
             return res.data
@@ -97,13 +97,14 @@ const Products = () => {
         setItemsPerPage(value)
         setCurrentPage(0)
     }
-
+    
+    // handle previous button 
     const handlePrevPage = () => {
         if(currentPage > 0) {
             setCurrentPage(currentPage - 1)
         }
     }
-
+    // handle next button
     const handleNextPage = () => {
         if(currentPage < pages.length - 1){
             setCurrentPage(currentPage + 1)
@@ -162,9 +163,9 @@ const Products = () => {
                         sortedproducts.map((pro, index) => <div key={index} className="card bg-base-100 shadow-xl">
                             <figure className="px-10 pt-10">
                                 <img
-                                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                                    src={pro.productImage}
                                     alt="Shoes"
-                                    className="rounded-xl" />
+                                    className="rounded-xl h-48 object-cover" />
                             </figure>
                             <div className="card-body p-9">
                                 <h2 className="text-xl font-semibold">{pro.productName}</h2>
@@ -183,7 +184,6 @@ const Products = () => {
                     }
                 </div>)
             }
-            currentPage : {currentPage}
             <div className=" flex justify-center gap-3 mt-7">
                 <button onClick={handlePrevPage} className="btn flex items-center">
                     <FaLongArrowAltLeft />
@@ -193,7 +193,7 @@ const Products = () => {
                     <button
                         onClick={() => setCurrentPage(page)}
                         className={currentPage === page ? "btn hover:bg-slate-300 bg-blue-500 text-white" : "btn hover:bg-slate-300"} key={index}>
-                        {page}
+                        {page + 1}
                     </button>)}
                 <button onClick={handleNextPage} className="btn flex items-center">
                     Next
