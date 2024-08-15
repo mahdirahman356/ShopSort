@@ -26,7 +26,7 @@ const Products = () => {
     const { data: products = [], refetch, isLoading } = useQuery({
         queryKey: ["products", { search, brand: selectedBrand, category: selectedCategory, priceRange: selectedPriceRange }],
         queryFn: async () => {
-            const res = await axios.get(`http://localhost:5000/products?search=${search}&brand=${selectedBrand}&category=${selectedCategory}&priceRange=${selectedPriceRange}`)
+            const res = await axios.get(`http://localhost:5000/products?search=${search}&brand=${selectedBrand}&category=${selectedCategory}&priceRange=${selectedPriceRange}&page=${currentPage}&size=${itemsPerPage}`)
             return res.data
         }
     })
